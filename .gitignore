@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+coverage/
+
+
+# Dependency directories
+node_modules/
+
+# Ignore database folder
+db_data/
+alldummydata
+# Ignore test-related files
+**/logs
+*.log
+npm-debug.log*
+pids
+lib-cov
+.grunt
+
+# Environment-specific files
+.vscode
+.env
+.env.test
