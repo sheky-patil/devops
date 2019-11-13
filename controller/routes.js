@@ -31,21 +31,21 @@ router.post('/login', loginUser);
 router.post('/forgot', forgotPassword);
 router.put('/reset', resetPassword);
 router.get('/users', middleware.validateToken, allUser);
-router.get('/users/:firstname', middleware.validateToken, userWithName);
+router.get('/users/:firstname', userWithName);
 
 //QUESTIONS
-router.get('/questions', middleware.validateToken, allQuestionData);
-router.get('/questions/:id', middleware.validateToken, questionwithId);
-router.get('/questions/sections/:sectionname', middleware.validateToken, questionWithCategory);
+router.get('/questions', allQuestionData);
+router.get('/questions/:id', questionwithId);
+router.get('/questions/sections/:sectionname', questionWithCategory);
 
 //SURVEYS
-router.get('/allsurveys', middleware.validateToken, allSurvey);
-router.get('/allsurveys/:surveyid', middleware.validateToken, surveyWithId);
+router.get('/allsurveys', allSurvey);
+router.get('/allsurveys/:surveyid', surveyWithId);
 
 //RESULT
-router.post('/result', middleware.validateToken, addFinalResult);
-router.get('/allresults', middleware.validateToken, allResults);
-router.get('/allresults/:surveyid', middleware.validateToken, resultWithId);
+router.post('/result', addFinalResult);
+router.get('/allresults', allResults);
+router.get('/allresults/:surveyid', resultWithId);
 
 router.get('*', controller.errorHandler);
 module.exports = router;
