@@ -9,6 +9,7 @@ const logger = require('./services/logger');
 require('dotenv').config();
 const port = process.env.PORT;
 const url = process.env.MONGOLAB_URI;
+// const secret = process.env.SECRET;
 
 //Connecting for database.
 const mongoose = require('mongoose');

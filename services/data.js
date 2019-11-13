@@ -1,7 +1,10 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 'use strict';
-
+require('dotenv').config();
+const secret = process.env.SECRET;
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
+const jwt    = require('jsonwebtoken');
 
 const Question = require('../models/questions');
 const User = require('../models/user');
@@ -53,8 +56,17 @@ const loginUser = (req, res) => {
 			});
 		}
 		else if(bcrypt.compareSync(pwd, data.passWord)){
+			const payload = {
+
+				check:  true
+	
+			  };
+			let token = jwt.sign(payload, secret, {
+				expiresIn: 30 // expires in half hour
+	        }); 
 			res.status(200).json({
-				message: 'Success'
+				message: 'Success',
+				token: token
 			});
 		}
 		else {
@@ -65,6 +77,49 @@ const loginUser = (req, res) => {
 	});
 };
 
+// forgot password api to check weather email id exist or not?
+const forgotPassword = (req, res) => {
+	const email_Id = req.body.emailid;
+	User.findOne({emailId: email_Id}, (err, data) => {
+		if(err){
+			res.status(404).json(err);
+		}
+		else {
+			if(!data){
+				res.status(404).json({
+					message: 'Email does not exist'
+				});
+			}
+			else {
+				console.log(data);
+				res.status(200).json({
+					message: 'Email exists !!'
+				});
+			}
+		}
+	});
+};
+
+// Resetting the password for particular user with email id,
+const resetPassword = (req, res) => {
+	// const user_Id = req.body.userid;
+	const email_Id = req.body.emailid;
+	const confirm_pwd = req.body.confirmpwd;
+	let newConfirm_pwd = bcrypt.hashSync(confirm_pwd, 8);
+	console.log(confirm_pwd);
+	console.log(newConfirm_pwd);
+	User.updateOne({ emailId : email_Id }, {$set : { passWord : newConfirm_pwd }}, (err, data)=>{
+		if(err){
+			res.status(404).json(err);
+		}
+		else {
+			console.log('RecordModified :' + data.nModified);
+			res.status(200).json({
+				message:'Password updated successfully'
+			});
+		}
+	});
+};
 
 //Retriving all user for database
 const allUser = (req, res) => {
@@ -197,6 +252,33 @@ const surveyWithId = (req, res) => {
 	});
 };
 
+//Adding results into result collections
+const addFinalResult = (req, res) => {
+	const survey_Id = req.body.surveyid;
+	const user_Id = req.body.userid;
+	const user_Name= req.body.username;
+	const result_array = req.body.finalresult;
+	const final_remark = req.body.finalremark;
+	const final_weightage = req.body.finalweightage;
+	Result.create({
+		surveyId: survey_Id,
+		userId: user_Id,
+		serName: user_Name,
+		result: result_array,
+		remark: final_remark,
+		surveyWeightage: final_weightage,
+	}, (err, data) => {
+		if (err) {
+			console.log(err);
+			res.status(404).json(err);
+		} else {
+			console.log(data);
+			res.status(201).json({
+				message:'Result added successfully'
+			});
+		}
+	});
+};
 
 //Retriving all results
 const allResults = (req, res) => {
@@ -239,6 +321,8 @@ const resultWithId = (req, res) => {
 module.exports = { 
 	addUser, 
 	loginUser,
+	forgotPassword,
+	resetPassword,
 	allUser, 
 	userWithName,
 	allQuestionData, 
@@ -246,6 +330,7 @@ module.exports = {
 	questionWithCategory,
 	allSurvey,
 	surveyWithId,
+	addFinalResult,
 	allResults,
 	resultWithId
 };
