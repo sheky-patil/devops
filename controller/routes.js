@@ -30,7 +30,7 @@ router.post('/adduser', addUser);
 router.post('/login', loginUser);
 router.post('/forgot', forgotPassword);
 router.put('/reset', resetPassword);
-router.get('/users', middleware.validateToken, allUser);
+router.get('/users', allUser);
 router.get('/users/:firstname', userWithName);
 
 //QUESTIONS
