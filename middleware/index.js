@@ -10,12 +10,12 @@ const validateToken = (req, res, next) => {
 	// decode token
 	if (token) {
 		// verifies secret and checks if the token is expired
-		jwt.verify(token, secret, (err) =>{      
+		jwt.verify(token, secret, (err, decoded) =>{      
 			if (err) {
-				res.status(404).json({ message: 'Invalid token Provided' });    
+				res.status(404).json(err);    
 			} else {
 				// // if everything is good, save to request for use in other routes
-				// req.decoded = decoded;    
+				req.decoded = decoded;    
 				next();
 			}
 		});

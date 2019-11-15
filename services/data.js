@@ -62,7 +62,7 @@ const loginUser = (req, res) => {
 	
 			  };
 			let token = jwt.sign(payload, secret, {
-				expiresIn: 30 // expires in half hour
+				expiresIn: 1800 // expires in half hour
 	        }); 
 			res.status(200).json({
 				message: 'Success',
