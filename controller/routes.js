@@ -11,12 +11,14 @@ const {
 	allQuestionData, 
 	questionwithId, 
 	questionWithCategory, 
+	addSurvey,
 	allSurvey, 
 	surveyWithId, 
 	addFinalResult, 
 	allResults, 
 	resultWithId 
 } = require('../services/data');
+
 const middleware = require('../middleware/index');
 
 router.get('/', (req, res) => {
@@ -39,6 +41,7 @@ router.get('/questions/:id', middleware.validateToken, questionwithId);
 router.get('/questions/sections/:sectionname', middleware.validateToken, questionWithCategory);
 
 //SURVEYS
+router.post('/addsurvey', middleware.validateToken, addSurvey);
 router.get('/allsurveys', middleware.validateToken, allSurvey);
 router.get('/allsurveys/:surveyid', middleware.validateToken, surveyWithId);
 

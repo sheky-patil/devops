@@ -21,26 +21,44 @@ const addUser = (req, res) => {
 	let newpassword = bcrypt.hashSync(pwd, 8);
 	console.log(newpassword);
 	const emailid = req.body.emailId;
-	User.create({
-		surveyId: uuid(),
-		userId: uuid(),
-		firstName: fname,
-		lastName: lname,
-		userName: uname,
-		passWord: newpassword,
-		emailId: emailid,
-		status: 'Enable'
-	}, (err, data) => {
-		if (err) {
-			console.log(err);
-			res.status(500).json(err);
-		} else {
-			console.log(data);
-			res.status(201).json({
-				message: 'User Register Successfully'
-			});
+	const is_Admin = req.body.isadmin;
+	User.findOne({userName:uname}, (err, data) => {
+		if(err){
+			res.status(404).json(err);
+		}
+		else {
+			if(!data){
+				User.create({
+					surveyId: uuid(),
+					userId: uuid(),
+					firstName: fname,
+					lastName: lname,
+					userName: uname,
+					passWord: newpassword,
+					emailId: emailid,
+					status: 'Enable',
+					isAdmin: is_Admin
+				}, (err, data) => {
+					if (err) {
+						console.log(err);
+						res.status(500).json(err);
+					} else {
+						console.log(data);
+						res.status(201).json({
+							message: 'User Register Successfully'
+						});
+					}
+				});
+			}
+			else {
+				console.log(data);
+				res.status(200).json({
+					message: 'Username already exists !!'
+				});
+			}
 		}
 	});
+	
 };
 
 
@@ -215,6 +233,27 @@ const questionWithCategory = (req, res) => {
 	});
 };
 
+//Filling survey collections with surveyId & userId
+const addSurvey = (req, res) => {
+	const survey_Id = req.body.surveyid;
+	const user_Id = req.body.userid;
+	Survey.create({
+		surveyId : survey_Id,
+		userId : user_Id,
+		createdOn : Date(),
+		modifiedOn : null,
+		isOpen : 'Open'
+	}, (err, data) => {
+		if (err) {
+			console.log(err);
+			res.status(400).json(err);
+		} else {
+			console.log(data);
+			res.status(201).json(data);
+		}
+	});
+};
+
 
 //Retriving all surveys
 const allSurvey = (req, res) => {
@@ -232,7 +271,6 @@ const allSurvey = (req, res) => {
 		}
 	});
 };
-
 
 //Retriving all survey with survey :id
 const surveyWithId = (req, res) => {
@@ -328,6 +366,7 @@ module.exports = {
 	allQuestionData, 
 	questionwithId,
 	questionWithCategory,
+	addSurvey,
 	allSurvey,
 	surveyWithId,
 	addFinalResult,

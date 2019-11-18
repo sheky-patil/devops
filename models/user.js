@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
 	userName: String,
 	passWord: String,
 	emailId: String,
-	status: String
+	status: String,
+	isAdmin:String
 }, {
 	versionKey: false
 });
