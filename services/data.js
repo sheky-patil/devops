@@ -10,6 +10,7 @@ const Question = require('../models/questions');
 const User = require('../models/user');
 const Survey = require('../models/survey');
 const Result = require('../models/result');
+const sesEmail = require('../util/sendEmail');
 
 //Adding user in database
 const addUser = (req, res) => {
@@ -356,6 +357,15 @@ const resultWithId = (req, res) => {
 	});
 };
 
+//Send Email invite to customer
+const sendEmailInvite = (req, res) => {
+	const to = req.body.to;
+	const subject = 'Welcome to Singtel !!';
+	const message = '<h1> Hello </h1> <br> <h4>You are recieving this email because you recently made contact to Singtel.<br> Below link will take us to asses your different level of devops so that we can understand your devops maturity level.<br>Please click on below link to continue </h4><br>http://singtel-elb-front-1227123907.us-east-1.elb.amazonaws.com:3000/#/ <br><h4>We thank you for your valuable time devoting to us.</h4><br><h2> Best Regards <br>Singtel</h2>';
+	sesEmail.sendEmail(to, subject, message);
+	res.status(200).json('Email sent to ' + to);
+};
+
 module.exports = { 
 	addUser, 
 	loginUser,
@@ -371,5 +381,6 @@ module.exports = {
 	surveyWithId,
 	addFinalResult,
 	allResults,
-	resultWithId
+	resultWithId,
+	sendEmailInvite
 };
