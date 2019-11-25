@@ -16,10 +16,9 @@ const {
 	surveyWithId, 
 	addFinalResult, 
 	allResults, 
-	resultWithId,
-	sendEmailInvite, 
+	resultWithId, 
 } = require('../services/data');
-
+const sendEmailInvite = require('../util/sendEmail');
 const middleware = require('../middleware/index');
 
 router.get('/', (req, res) => {
@@ -52,7 +51,6 @@ router.get('/allresults', middleware.validateToken, allResults);
 router.get('/allresults/:surveyid', middleware.validateToken, resultWithId);
 
 //Email Invite
-router.post('/send', sendEmailInvite);
-
+router.post('/send', middleware.validateToken, sendEmailInvite.sendEmail);
 router.get('*', controller.errorHandler);
 module.exports = router;
